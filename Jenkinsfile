@@ -2,39 +2,29 @@ pipeline {
     agent none
 
     stages {
-        stage('Clone') {
+        stage('Clone, Install y Test') {
             agent {
                 docker {
                     image 'python:3.12-slim'
                     args '-u root:root'
                 }
             }
-            steps {
-                git branch: 'master', url: 'https://github.com/daemoncibsec/django_tutorial.git'
-            }
-        }
-
-        stage('Install') {
-            agent {
-                docker {
-                    image 'python:3.12-slim'
-                    args '-u root:root'
+            stages {
+                stage('Clone') {
+                    steps {
+                        git branch: 'master', url: 'https://github.com/daemoncibsec/django_tutorial.git'
+                    }
                 }
-            }
-            steps {
-                sh 'pip install -r requirements.txt'
-            }
-        }
-
-        stage('Test') {
-            agent {
-                docker {
-                    image 'python:3.12-slim'
-                    args '-u root:root'
+                stage('Install') {
+                    steps {
+                        sh 'pip install -r requirements.txt'
+                    }
                 }
-            }
-            steps {
-                sh 'python3 manage.py test'
+                stage('Test') {
+                    steps {
+                        sh 'python3 manage.py test'
+                    }
+                }
             }
         }
 
