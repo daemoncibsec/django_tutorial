@@ -2,7 +2,7 @@
 FROM python:3.13-slim
 
 # Directorio de trabajo dentro del contenedor
-WORKDIR /app
+WORaKDIR /app
 
 # Copiar e instalar dependencias
 COPY requirements.txt .
