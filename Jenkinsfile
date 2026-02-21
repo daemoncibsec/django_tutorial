@@ -1,6 +1,10 @@
 pipeline {
     agent none
 
+    triggers {
+        githubPush()
+    }
+
     stages {
         stage('Clone, Install y Test') {
             agent {
@@ -52,10 +56,26 @@ pipeline {
             }
         }
 
-        stage('Delete Image') {
+        stage('Delete Local Image') {
             agent { label 'built-in' }
             steps {
                 sh 'docker rmi daemoncibsec/app-django:latest'
+            }
+        }
+
+        stage('Deploy to VPS') {
+            agent { label 'built-in' }
+            steps {
+                sshagent(credentials: ['vps-ssh-credentials']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no goliath.da3m0n.org "
+                            cd jenkins &&
+                            docker compose down &&
+                            docker compose pull &&
+                            docker compose up -d
+                        "
+                    '''
+                }
             }
         }
     }
