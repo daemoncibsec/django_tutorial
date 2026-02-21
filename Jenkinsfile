@@ -64,7 +64,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['vps-ssh-credentials']) {
                     sh '''
-                        ssh goliath.da3m0n.org "
+                        ssh debian@goliath.da3m0n.org "
                             cd jenkins &&
                             docker compose down &&
                             docker compose pull &&
