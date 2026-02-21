@@ -1,10 +1,6 @@
 pipeline {
     agent none
 
-    triggers {
-        githubPush()
-    }
-
     stages {
         stage('Clone, Install y Test') {
             agent {
